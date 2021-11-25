@@ -35,14 +35,14 @@ def simulate_click(grid, pos):
 
 def generate_A(grid_size):
     """
-       Generates the Action Matrix for a given Grid size
+    Generates the Action Matrix for a given Grid size
 
-       Args:
-           grid_size: int that represents the size of the grid
+    Args:
+        grid_size: int that represents the size of the grid
 
-       Returns:
-           2D np.array that represents the Action Matrix
-           (Matrix of all possible actions for a Grid)
+    Returns:
+        2D np.array that represents the Action Matrix
+        (Matrix of all possible actions for a Grid)
     """
     A = np.zeros([grid_size**2, grid_size**2], int)
     counter = 0
@@ -55,13 +55,13 @@ def generate_A(grid_size):
 
 def generate_grid_matrix(challenge_input_file):
     """
-           Reads from file to create the desired grid
+    Reads from file to create the desired grid
 
-           Args:
-               challenge_input_file: .txt file that specifies the start grid
+    Args:
+        challenge_input_file: .txt file that specifies the start grid
 
-           Returns:
-               2D np.array that represents the Grid Matrix
+    Returns:
+        2D np.array that represents the Grid Matrix
     """
     file = open(challenge_input_file, "r")
     size = int(file.readline())
@@ -75,13 +75,13 @@ def generate_grid_matrix(challenge_input_file):
 
 def is_possible(input_file):
     """
-               Reads from file and decides whether given grid is solvable by allowed actions
+    Reads from file and decides whether given grid is solvable by allowed actions
 
-               Args:
-                   input_file: .txt file that specifies the start grid
+    Args:
+        input_file: .txt file that specifies the start grid
 
-               Returns:
-                   "Yes" or "No" depending on the configuration (solvable non-solvable)
+    Returns:
+        "Yes" or "No" depending on the configuration (solvable non-solvable)
         """
     b = generate_grid_matrix(input_file).flatten()
     A = generate_A(int(math.sqrt(len(b))))
