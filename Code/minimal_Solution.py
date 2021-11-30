@@ -5,6 +5,10 @@ import math
 Code that solves the "Turn all the lights off" Task.
 Returns "Yes" or "No" depending on the configuration (solvable non-solvable)
 supplied in the "Input.txt" 
+
+To use:
+>> is_solvable("Input.txt")
+
 '''
 
 
@@ -44,7 +48,7 @@ def generate_A(grid_size):
         2D np.array that represents the Action Matrix
         (Matrix of all possible actions for a Grid)
     """
-    A = np.zeros([grid_size**2, grid_size**2], int)
+    A = np.zeros([grid_size ** 2, grid_size ** 2], int)
     counter = 0
     for y in range(grid_size):
         for x in range(grid_size):
@@ -53,13 +57,13 @@ def generate_A(grid_size):
             counter += 1
     return A
 
+
 def generate_grid_matrix(challenge_input_file):
     """
     Reads from file to create the desired grid
 
     Args:
         challenge_input_file: .txt file that specifies the start grid
-
     Returns:
         2D np.array that represents the Grid Matrix
     """
@@ -73,9 +77,11 @@ def generate_grid_matrix(challenge_input_file):
     file.close()
     return matrix
 
-def is_possible(input_file):
+
+def is_solvable(input_file):
     """
     Reads from file and decides whether given grid is solvable by allowed actions
+    (by checking whether an Ax=b equation is solvable)
 
     Args:
         input_file: .txt file that specifies the start grid
@@ -91,26 +97,27 @@ def is_possible(input_file):
     for k in range(n):
         # partial pivoting
         if A[k, k] == 0:
-            for i in range(k+1, n):
+            #check if we have a one belowe the 0 at k,k
+            for i in range(k + 1, n):
                 if A[i, k] == 1:
-                    for j in range(k, n):
-                        A[k, j], A[i, j] = A[i, j],  A[k, j]
+                    #if we have a 1 switch the two rows
+                    A[[k, i], :] = A[[i, k], :]
                     b[k], b[i] = b[i], b[k]
                     break
 
         # elimination
         for i in range(n):
             if i == k or A[i, k] == 0: continue
-            A[i, k:n] = (A[i, k:n] + A[k, k:n])%2
-            b[i] = (b[i]+b[k]) % 2
+            # if we have a 1 at n,k add row k to n, ow we have a 0 at n,k
+            A[i, k:n] = (A[i, k:n] + A[k, k:n]) % 2
+            b[i] = (b[i] + b[k]) % 2
 
     # check if solution exists
     for i in range(n):
         if A[i, i] == 0 and b[i] == 1:
             return "No"
-
     return "Yes"
 
 
-print(is_possible("Input.txt"))
+print(is_solvable("Input.txt"))
 

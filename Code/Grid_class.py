@@ -7,9 +7,6 @@ class Grid:
         self.grid_size = len(grid)
         self.A = self.generate_A()# ??
 
-    def render(self):
-        print(self.grid)
-
     def change_single(self, pos, value):
         self.grid[pos[1], pos[0]] = value
 
@@ -42,22 +39,28 @@ class Grid:
         #print(A)
         b = self.grid.flatten()
         n = len(A)
+        row_len = len(self.grid)
         sol = []
+
+        # main loop
         # main loop
         for k in range(n):
             # partial pivoting
-            if A[k,k] == 0:
-                for i in range(k+1, n):
+            if A[k, k] == 0:
+                # check if we have a one belowe the 0 at k,k
+                for i in range(k + 1, n):
                     if A[i, k] == 1:
-                        for j in range(k, n):
-                            A[k, j], A[i, j] = A[i, j],  A[k, j]
+                        # if we have a 1 switch the two rows
+                        A[[k, i], :] = A[[i, k], :]
                         b[k], b[i] = b[i], b[k]
                         break
+
             # elimination
             for i in range(n):
                 if i == k or A[i, k] == 0: continue
-                A[i, k:n] = (A[i, k:n] + A[k, k:n])%2
-                b[i] = (b[i]+b[k]) % 2
+                # if we have a 1 at n,k add row k to n, ow we have a 0 at n,k
+                A[i, k:n] = (A[i, k:n] + A[k, k:n]) % 2
+                b[i] = (b[i] + b[k]) % 2
 
         # check if solution exists
         for i in range(n):
@@ -66,7 +69,6 @@ class Grid:
 
         for i in range(n):
             if b[i] == 1:
-                row_len = len(self.grid)
                 sol.append([i%row_len, int(i/row_len)])
 
         return sol
