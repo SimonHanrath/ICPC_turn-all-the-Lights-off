@@ -1,5 +1,5 @@
 import pygame
-from Full_Solution import Grid
+from Grid_class import Grid
 import numpy as np
 
 
@@ -18,7 +18,7 @@ def value_to_color(value, color1=(255, 255, 255), color2=(0, 0, 0)):
         return color2
 
 
-def draw_grid(grid, window_size, surface, color1=(0, 0, 0), color2=(205, 205, 102), color3=(255, 255, 255)):
+def draw_grid(grid, window_size, surface, color1=(205, 205, 102), color2=(0, 0, 0), color3=(255, 255, 255)):
     grid_size = len(grid)
     cell_size = int(window_size / grid_size)
     for i in range(grid_size):
@@ -38,14 +38,15 @@ def draw_solution(surface, solution, cell_size, color):
 
 
 pygame.init()
-window_size = 500
+window_size = 800
 pygame.display.set_caption('Manuell Grid (use space to toggle solution)')
 window_surface = pygame.display.set_mode((window_size, window_size))
 clock = pygame.time.Clock()
 is_running = True
 
-grid = np.zeros([4, 4], int)
-# grid = np.array([[1,0,1],[0,1,1],[0,1,1]])
+
+size_of_grid = 3
+grid = np.zeros([size_of_grid, size_of_grid], int)
 myGrid = Grid(grid)
 solution = []
 show_solution = False
@@ -54,14 +55,16 @@ cell_size = int(window_size / myGrid.grid_size)
 while is_running:
     clock.tick(60)
     for event in pygame.event.get():
-        if event.type == pygame.MOUSEBUTTONUP:
+        if event.type == pygame.MOUSEBUTTONDOWN:
             clicked_rect = get_clicked_rect(event.pos, cell_size)
-            myGrid.grid = myGrid.simulate_click(myGrid.grid, clicked_rect)
-            if clicked_rect in solution:
-                solution.remove(clicked_rect)
-            else:
-                solution.append(clicked_rect)
-                # solution = myGrid.get_full_solution()
+            # left mousebutton
+            if pygame.mouse.get_pressed()[0]:
+                myGrid.grid = myGrid.simulate_click(myGrid.grid, clicked_rect)
+            #right mousebutton
+            elif pygame.mouse.get_pressed()[2]:
+                myGrid.change_single(clicked_rect)
+
+            solution = myGrid.get_full_solution()
 
         if event.type == pygame.KEYDOWN:
             show_solution = not show_solution
@@ -71,6 +74,6 @@ while is_running:
 
     draw_grid(myGrid.grid, window_size, window_surface)
 
-    if show_solution:
+    if show_solution and type(solution) != str:
         draw_solution(window_surface, solution, cell_size, (255, 0, 0))
     pygame.display.update()

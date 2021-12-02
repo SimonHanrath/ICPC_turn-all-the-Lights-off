@@ -7,8 +7,8 @@ class Grid:
         self.grid_size = len(grid)
         self.A = self.generate_A()# ??
 
-    def change_single(self, pos, value):
-        self.grid[pos[1], pos[0]] = value
+    def change_single(self, pos):
+        self.grid[pos[1], pos[0]] = not self.grid[pos[1], pos[0]]
 
     def simulate_click(self, grid, pos):
         x = pos[1]
